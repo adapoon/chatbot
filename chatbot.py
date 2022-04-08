@@ -3,7 +3,10 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 import logging
 import os
-
+import search
+import browse
+import vote
+import mysql.connector
 
 def main():
     # Load your token and create an Updater for your Bot
@@ -24,9 +27,10 @@ def main():
     dispatcher.add_handler(echo_handler)
 
     # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("add", add_command))
     dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(CommandHandler("hello", hello_command))
+    dispatcher.add_handler(CommandHandler("search", search_command))
+    dispatcher.add_handler(CommandHandler("vote", vote_command))
+    dispatcher.add_handler(CommandHandler("browse", browse_command))
 
 
     # To start the bot:
@@ -47,20 +51,16 @@ def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Helping you helping you.')
 
-
-def add_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /add is issued."""
-    try: 
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        update.message.reply_text('You have said ' + msg)
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /add <keyword>')
-
-def hello_command(update: Update, context: CallbackContext) -> None:
-    name = context.args[0]
-    reply_message = "Good day, " + name + "!"
-    update.message.reply_text(reply_message)
-
+def search_command(update: Update, context: CallbackContext) -> None:
+    search.start(update, context)
+    
+def vote_command(update: Update, context: CallbackContext) -> None:
+    vote.start(update, context)
+    
+def browse_command(update: Update, context: CallbackContext) -> None:
+    browse.start(update, context)
+    
+    
+    
 if __name__ == '__main__':
     main()
