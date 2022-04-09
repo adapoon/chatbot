@@ -4,7 +4,7 @@ from telegram.ext import *
 import logging
 import os
 import mysql.connector
-import search, browse, vote, location
+import search, browse, vote, location, view
 
 def main():
     # Load your token and create an Updater for your Bot
@@ -20,9 +20,7 @@ def main():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
     
-    dispatcher.add_handler(MessageHandler(Filters.location,
-                                        location_resource,
-                                        pass_user_data=True))
+    # dispatcher.add_handler()
     
     # register a dispatcher to handle message: here we register an echo dispatcher
     # echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
@@ -35,6 +33,20 @@ def main():
     dispatcher.add_handler(CommandHandler("vote", vote_command))
     dispatcher.add_handler(CommandHandler("browse", browse_command))
 
+    # dispatcher.add_handler(CallbackQueryHandler(view_route))
+
+
+
+
+    dispatcher.add_handler(ConversationHandler(
+                                entry_points=[MessageHandler(Filters.location, location_message)],
+                                states={i : [CallbackQueryHandler(reply)] for i in range(1,518)},
+                                fallbacks=[CommandHandler('cancel', cancel)]
+                            )
+                        )
+
+
+    
 
     # To start the bot:
     updater.start_polling()
@@ -53,10 +65,8 @@ def main():
 
 def start_command(update: Update, context: CallbackContext):
     buttons = [
-        [KeyboardButton("/search")], 
-        [KeyboardButton("/browse")],
-        [KeyboardButton("/vote")],
-        [KeyboardButton("Nearest routes", request_location=True)],
+        [KeyboardButton("/search"), KeyboardButton("/browse")], 
+        [KeyboardButton("/vote"), KeyboardButton("Nearest routes", request_location=True)],
         [KeyboardButton("/help")]
         ]
     context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to my bot!", reply_markup=ReplyKeyboardMarkup(buttons))
@@ -67,8 +77,9 @@ def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Helping you helping you.')
 
-def location_resource(update: Update, context: CallbackContext) -> None:
+def location_message(update: Update, context: CallbackContext) -> int:
     location.start(update, context)
+    return 1
  
 def search_command(update: Update, context: CallbackContext) -> None:
     search.start(update, context)
@@ -79,7 +90,18 @@ def vote_command(update: Update, context: CallbackContext) -> None:
 def browse_command(update: Update, context: CallbackContext) -> None:
     browse.start(update, context)
     
+def view_route(update: Update, context: CallbackContext):
+    view.start(update, context)
     
+def cancel(update: Update, context: CallbackContext) -> int:
+    return ConversationHandler.END   
+    
+def reply(update: Update, context: CallbackContext):
+    logging.info("Reply: " + update.callback_query.data)
+    view.start(update, context, update.callback_query.data)
+    # logging.info("update: " + str(update))
+    # logging.info("context: " + str(context))
+    return 1
     
 if __name__ == '__main__':
     main()
