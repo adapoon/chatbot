@@ -8,12 +8,25 @@ mydb = mysql.connector.connect(
 
 sql = mydb.cursor()
 
-def browseByRegion():
-    cur = mydb.cursor()
-    cur.execute("SELECT region FROM chatbot.route GROUP BY region")
-    result = cur.fetchall()
-    return result
+def startCommand(update: Update, context: CallbackContext):
 
-print(browseByRegion())
+    sql.execute("select region from chatbot.route group by region")
+    sql_result = sql.fetchall() 
+    markup = types.ReplyKeyboardMarkup()
+    for x in sql_result:
+      markup.add(types.ReplyKeyboardButton(x[0]))
+      
+    buttons = [[KeyboardButton(button1)], [KeyboardButton(button2)], [KeyboardButton(button3)]]
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Which region are you looking for?", reply_markup=markup)
+
+
+
+#def browseByRegion():
+    #cur = mydb.cursor()
+    #cur.execute("SELECT region FROM chatbot.route GROUP BY region")
+    #result = cur.fetchall()
+    #return result
+
+#print(browseByRegion())
 
 
