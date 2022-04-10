@@ -8,7 +8,7 @@ mydb = mysql.connector.connect(
 
 sql = mydb.cursor()
 
-def startCommand(update: Update, context: CallbackContext):
+def start(update, context):
 
     sql.execute("select region from chatbot.route group by region")
     sql_result = sql.fetchall() 
