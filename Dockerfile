@@ -8,6 +8,6 @@ COPY view.py /view.py
 COPY requirements.txt /requirements.txt
 RUN pip install pip update
 RUN pip install -r requirements.txt
-ENV ACCESS_TOKEN=5158343992:AAFuitFyKyiBiLj0Jf0qgXaupzKZ-I1A1NY
+ENV ACCESS_TOKEN=
 EXPOSE 80
 ENTRYPOINT ["python", "/chatbot.py"]
