@@ -1,7 +1,7 @@
 from telegram import *
 from telegram.ext import * 
 import logging, os, mysql.connector
-import search, browse, vote, location, view, help
+import search, browse, vote, location, view, help, top10
 
 def main():
     # Load your token and create an Updater for your Bot
@@ -24,7 +24,6 @@ def main():
     dispatcher.add_handler(CommandHandler("search", search_command))
     dispatcher.add_handler(CommandHandler("browse", browse_command))
     
-    
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[CommandHandler("vote", vote_command)],
                                 states={i : [CallbackQueryHandler(vote.show_result)] for i in range(1,518)},
@@ -35,6 +34,13 @@ def main():
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[MessageHandler(Filters.location, location_message)],
                                 states={i : [CallbackQueryHandler(location.show_result)] for i in range(1,518)},
+                                fallbacks=[CommandHandler('cancel', cancel)]
+                            )
+                        )
+
+    dispatcher.add_handler(ConversationHandler(
+                                entry_points=[CommandHandler("top10", top10_command)],
+                                states={i : [CallbackQueryHandler(top10.show_result)] for i in range(1,518)},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
@@ -80,6 +86,10 @@ def vote_command(update: Update, context: CallbackContext) -> int:
     
 def browse_command(update: Update, context: CallbackContext) -> None:
     browse.start(update, context)
+    
+def top10_command(update: Update, context: CallbackContext) -> int:
+    top10.start(update, context)
+    return 1
     
 def view_route(update: Update, context: CallbackContext):
     view.start(update, context)

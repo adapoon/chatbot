@@ -5,6 +5,8 @@ import logging, os, mysql.connector
 def show_route(update, context, route_id):
     logging.info("View:")
     
+    context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="Retrieving hiking route...")
+
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
@@ -36,6 +38,7 @@ def show_route(update, context, route_id):
 
     #update.callback_query.message.reply_html(msg)
     #update.callback_query.message.reply_text(msg)
+    #logging.info(str(update.callback_query))
     context.bot.send_message(chat_id=update.effective_chat.id, parse_mode=ParseMode.HTML, text=msg)
     context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+image)
     context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+map)

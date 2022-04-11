@@ -21,7 +21,7 @@ def start(update, context):
     for (route_id, name) in cursor:
         button_list.append([InlineKeyboardButton(chr(a)+". " +name, callback_data = route_id)])
         a += 1
-      
+    
     update.message.reply_text(msg, reply_markup = InlineKeyboardMarkup(button_list))
 
     cursor.close()
@@ -41,11 +41,11 @@ def show_result(update: Update, context: CallbackContext):
     cursor = cnx.cursor()
     
     logging.info(update.callback_query.data)
-
+    answer = update.callback_query.data
+    
     ''' insert vote data '''
-
     query = ("INSERT INTO vote (route_id, vote_count) VALUES(%s, 1) ON DUPLICATE KEY UPDATE vote_count = vote_count + 1")
-    cursor.execute(query, (update.callback_query.data, ))
+    cursor.execute(query, (answer, ))
     cnx.commit()
     logging.info("lastrowid: " + str(cursor.statement))
 
@@ -55,7 +55,6 @@ def show_result(update: Update, context: CallbackContext):
     options = update.callback_query.message.reply_markup.inline_keyboard
     logging.info("len: " + str(len(options)))
     
-    
     a = 65
     for i in range(len(options)):
         query = ("SELECT name, IFNULL(vote_count, 0) FROM route LEFT JOIN vote ON route.route_id = vote.route_id WHERE route.route_id = %s")
@@ -64,10 +63,13 @@ def show_result(update: Update, context: CallbackContext):
         cursor.execute(query, (route_id, ))
         
         row = cursor.fetchone()
-        msg += chr(a)+". " + row[0] + " ["+str(row[1])+"]\n";
+        if answer == route_id:
+            msg += "<b>" + chr(a)+". " + row[0] + " ["+str(row[1])+"]</b>\n";
+        else:
+            msg += chr(a)+". " + row[0] + " ["+str(row[1])+"]\n";
         a += 1
 
-    update.callback_query.message.reply_text(msg)
+    update.callback_query.message.reply_text(msg, parse_mode=ParseMode.HTML)
         
     
  
