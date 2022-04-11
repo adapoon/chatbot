@@ -17,10 +17,10 @@ def start(update, context):
     query = ("SELECT route_id, name FROM route ORDER BY RAND() ASC LIMIT 4;")
     cursor.execute(query)
     
-    i = 65
+    a = 65
     for (route_id, name) in cursor:
-        button_list.append([InlineKeyboardButton(chr(i)+". " +name, callback_data = route_id)])
-        i += 1
+        button_list.append([InlineKeyboardButton(chr(a)+". " +name, callback_data = route_id)])
+        a += 1
       
     update.message.reply_text(msg, reply_markup = InlineKeyboardMarkup(button_list))
 
@@ -32,32 +32,42 @@ def show_result(update: Update, context: CallbackContext):
     logging.info("Voting show_list")
     context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     
+    
     msg = ""
-    options = update.callback_query.message.reply_markup.inline_keyboard[0]
     
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
-    ''' insert vote data '''
     cursor = cnx.cursor()
-    query = ("INSERT INTO vote SET vote_count = vote_count + 1 WHERE route_id = %s")
-    route_id = options[i].callback_data
-    cursor.execute(query, (route_id, ))
+    
+    logging.info(update.callback_query.data)
 
+    ''' insert vote data '''
+
+    query = ("INSERT INTO vote (route_id, vote_count) VALUES(%s, 1) ON DUPLICATE KEY UPDATE vote_count = vote_count + 1")
+    cursor.execute(query, (update.callback_query.data, ))
+    logging.info("lastrowid: " + str(cursor.statement))
+
+            
+            
     ''' show voting result '''
+    options = update.callback_query.message.reply_markup.inline_keyboard
+    logging.info("len: " + str(len(options)))
+    
+    
+    a = 65
     for i in range(len(options)):
-        cursor = cnx.cursor()
-        query = ("SELECT route_id, name FROM route WHERE route_id = %s")
-        route_id = options[i].callback_data
+        query = ("SELECT name, IFNULL(vote_count, 0) FROM route LEFT JOIN vote ON route.route_id = vote.route_id WHERE route.route_id = %s")
+        route_id = options[i][0].callback_data
+        logging.info(route_id)
         cursor.execute(query, (route_id, ))
         
-        for (route_id, name) in cursor:
-            msg += name + "\n";
+        row = cursor.fetchone()
+        msg += chr(a)+". " + row[0] + " ["+str(row[1])+"]\n";
+        a += 1
 
-        
     update.callback_query.message.reply_text(msg)
         
-    logging.info(str(update.callback_query.message.reply_markup.inline_keyboard[0]))
     
  
     return ConversationHandler.END
