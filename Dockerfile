@@ -6,6 +6,7 @@ COPY vote.py /vote.py
 COPY location.py /location.py
 COPY view.py /view.py
 COPY help.py /help.py
+COPY top10.py /top10.py
 COPY requirements.txt /requirements.txt
 RUN pip install pip update
 RUN pip install -r requirements.txt
