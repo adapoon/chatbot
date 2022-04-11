@@ -46,6 +46,7 @@ def show_result(update: Update, context: CallbackContext):
 
     query = ("INSERT INTO vote (route_id, vote_count) VALUES(%s, 1) ON DUPLICATE KEY UPDATE vote_count = vote_count + 1")
     cursor.execute(query, (update.callback_query.data, ))
+    cnx.commit()
     logging.info("lastrowid: " + str(cursor.statement))
 
             
