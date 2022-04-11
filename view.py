@@ -4,17 +4,17 @@ import logging, os, mysql.connector
 
 def show_route(update, context, route_id):
     logging.info("View:")
-    
+    media = []
     context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="Retrieving hiking route...")
 
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
     cursor = cnx.cursor()
-    query = ("SELECT name, description, region, district, image, map, length, duration, elevation FROM route WHERE route_id = %s")
+    query = ("SELECT name, description, region, district, image, map, length, duration, elevation, latitude, longitude FROM route WHERE route_id = %s")
     cursor.execute(query, (route_id, ))
     
-    for (name, description, region, district, image, map, length, duration, elevation) in cursor:
+    for (name, description, region, district, image, map, length, duration, elevation, latitude, longitude) in cursor:
         hh = duration // 60
         mm = duration % 60
         if hh > 0:
@@ -40,10 +40,14 @@ def show_route(update, context, route_id):
     #update.callback_query.message.reply_text(msg)
     #logging.info(str(update.callback_query))
     context.bot.send_message(chat_id=update.effective_chat.id, parse_mode=ParseMode.HTML, text=msg)
-    context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+image)
-    context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+map)
+    # context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+image)
+    # context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+map)
 
 
+    media.append(InputMediaPhoto('https://comp7940images.blob.core.windows.net/images/'+image));
+    media.append(InputMediaPhoto('https://comp7940images.blob.core.windows.net/images/'+map));
+    context.bot.send_media_group(chat_id=update.effective_chat.id, media=media)
+    
     cursor.close()
     cnx.close()
     
