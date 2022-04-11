@@ -6,9 +6,9 @@ from telegram.ext import *
 def start(update, context, route_id):
     logging.info("View:")
     
-    cnx = mysql.connector.connect(user='comp7940group2', password='hkbuMySQL7940',
-                                  host='comp7940-mysql.mysql.database.azure.com',
-                                  database='chatbot')
+    cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
+                                  host=os.environ['MYSQL_HOST'],
+                                  database=os.environ['MYSQL_DTBS'])
     cursor = cnx.cursor()
     query = ("SELECT name, description, region, district, image, map, length, duration, elevation FROM route WHERE route_id = %s")
     cursor.execute(query, (route_id, ))

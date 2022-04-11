@@ -14,9 +14,10 @@ def start(update, context):
     
     button_list = []
     
-    cnx = mysql.connector.connect(user='comp7940group2', password='hkbuMySQL7940',
-                                  host='comp7940-mysql.mysql.database.azure.com',
-                                  database='chatbot')
+    cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
+                                  host=os.environ['MYSQL_HOST'],
+                                  database=os.environ['MYSQL_DTBS'])
+                                  
     cursor = cnx.cursor()
     query = ("SELECT route_id, name, SQRT(POWER(latitude-%s, 2) + POWER(longitude-%s, 2)) as distance, latitude, longitude FROM route ORDER BY distance ASC LIMIT 10;")
     cursor.execute(query, (update.message.location.latitude, update.message.location.longitude))
