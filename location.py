@@ -36,7 +36,7 @@ def start(update, context):
     cnx.close()
     
     
-def show_list(update: Update, context: CallbackContext):
+def show_result(update: Update, context: CallbackContext):
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     view.show_route(update, context, update.callback_query.data)
     return ConversationHandler.END

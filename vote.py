@@ -28,11 +28,36 @@ def start(update, context):
     cnx.close()
     
     
-def show_list(update: Update, context: CallbackContext):
+def show_result(update: Update, context: CallbackContext):
     logging.info("Voting show_list")
     context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     
-    logging.info(str(update.callback_query))
+    msg = ""
+    options = update.callback_query.message.reply_markup.inline_keyboard[0]
+    
+    cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
+                                  host=os.environ['MYSQL_HOST'],
+                                  database=os.environ['MYSQL_DTBS'])
+    ''' insert vote data '''
+    cursor = cnx.cursor()
+    query = ("INSERT INTO vote SET vote_count = vote_count + 1 WHERE route_id = %s")
+    route_id = options[i].callback_data
+    cursor.execute(query, (route_id, ))
+
+    ''' show voting result '''
+    for i in range(len(options)):
+        cursor = cnx.cursor()
+        query = ("SELECT route_id, name FROM route WHERE route_id = %s")
+        route_id = options[i].callback_data
+        cursor.execute(query, (route_id, ))
+        
+        for (route_id, name) in cursor:
+            msg += name + "\n";
+
+        
+    update.callback_query.message.reply_text(msg)
+        
+    logging.info(str(update.callback_query.message.reply_markup.inline_keyboard[0]))
     
  
     return ConversationHandler.END

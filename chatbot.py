@@ -27,21 +27,17 @@ def main():
     
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[CommandHandler("vote", vote_command)],
-                                states={i : [CallbackQueryHandler(vote.show_list)] for i in range(1,518)},
+                                states={i : [CallbackQueryHandler(vote.show_result)] for i in range(1,518)},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
     
-
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[MessageHandler(Filters.location, location_message)],
-                                states={i : [CallbackQueryHandler(location.show_list)] for i in range(1,518)},
+                                states={i : [CallbackQueryHandler(location.show_result)] for i in range(1,518)},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
-
-
-    
 
     # To start the bot:
     updater.start_polling()
