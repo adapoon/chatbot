@@ -5,7 +5,7 @@ from telegram.ext import *
 
 #This function show 10 route records.
 def start(update, context):
-    msg = "Search results:\n"
+    msg = "Browse results:\n"
     cnx = mysql.connector.connect(user='comp7940group2', password='hkbuMySQL7940',
                                   host='comp7940-mysql.mysql.database.azure.com',
                                   database='chatbot')
