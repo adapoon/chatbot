@@ -2,7 +2,7 @@ from telegram import *
 from telegram.ext import * 
 import logging, os, mysql.connector
 
-def start(update, context, route_id):
+def show_route(update, context, route_id):
     logging.info("View:")
     
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
@@ -30,7 +30,7 @@ def start(update, context, route_id):
 
 
     logging.info(str(update))
-    context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
+    #context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     #context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     #context.bot.edit_message_text(chat_id=update.effective_chat.id, text=name, message_id = update.callback_query.message.message_id, parse_mode=ParseMode.HTML)
 

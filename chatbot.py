@@ -22,8 +22,16 @@ def main():
     dispatcher.add_handler(CommandHandler("start", start_command))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("search", search_command))
-    dispatcher.add_handler(CommandHandler("vote", vote_command))
     dispatcher.add_handler(CommandHandler("browse", browse_command))
+    
+    
+    dispatcher.add_handler(ConversationHandler(
+                                entry_points=[CommandHandler("vote", vote_command)],
+                                states={i : [CallbackQueryHandler(vote.show_list)] for i in range(1,518)},
+                                fallbacks=[CommandHandler('cancel', cancel)]
+                            )
+                        )
+    
 
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[MessageHandler(Filters.location, location_message)],
@@ -54,7 +62,7 @@ def start_command(update: Update, context: CallbackContext):
 
     buttons = [
         [KeyboardButton("/search"), KeyboardButton("/browse"), KeyboardButton("/vote"), KeyboardButton("/help")], 
-        [KeyboardButton("Nearest routes", request_location=True)]
+        [KeyboardButton("/top10"), KeyboardButton("Nearest routes", request_location=True)]
         ]
     context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to the Official HikeBot!", reply_markup=ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True))
 
@@ -70,8 +78,9 @@ def location_message(update: Update, context: CallbackContext) -> int:
 def search_command(update: Update, context: CallbackContext) -> None:
     search.start(update, context)
     
-def vote_command(update: Update, context: CallbackContext) -> None:
+def vote_command(update: Update, context: CallbackContext) -> int:
     vote.start(update, context)
+    return 1
     
 def browse_command(update: Update, context: CallbackContext) -> None:
     browse.start(update, context)

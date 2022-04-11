@@ -1,9 +1,10 @@
 from telegram import *
 from telegram.ext import * 
 import logging, os, mysql.connector
+import view
 
 def start(update, context):
-    msg = "Nearest routes:\n"
+    msg = "Which route do you like more?\n"
     
     logging.info("Voting")
     
@@ -13,16 +14,12 @@ def start(update, context):
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
     cursor = cnx.cursor()
-    query = ("SELECT route_id, name, SQRT(POWER(latitude-%s, 2) + POWER(longitude-%s, 2)) as distance, latitude, longitude FROM route ORDER BY distance ASC LIMIT 10;")
-    cursor.execute(query, (update.message.location.latitude, update.message.location.longitude))
+    query = ("SELECT route_id, name FROM route ORDER BY RAND() ASC LIMIT 4;")
+    cursor.execute(query)
     
-    i = 1
-    for (route_id, name, distance, latitude, longitude) in cursor:
-        loc1 = (latitude, longitude)
-        loc2 = (update.message.location.latitude, update.message.location.longitude)
-        dist = hs.haversine(loc1, loc2)
-  
-        button_list.append([InlineKeyboardButton(str(i)+". " +name + " ("+str(round(dist,1))+"km)", callback_data = route_id)])
+    i = 65
+    for (route_id, name) in cursor:
+        button_list.append([InlineKeyboardButton(chr(i)+". " +name, callback_data = route_id)])
         i += 1
       
     update.message.reply_text(msg, reply_markup = InlineKeyboardMarkup(button_list))
@@ -32,6 +29,11 @@ def start(update, context):
     
     
 def show_list(update: Update, context: CallbackContext):
-    view.start(update, context, update.callback_query.data)
+    logging.info("Voting show_list")
+    context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
+    
+    logging.info(str(update.callback_query))
+    
+ 
     return ConversationHandler.END
     
