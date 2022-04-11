@@ -1,9 +1,6 @@
 from telegram import *
 from telegram.ext import * 
-
-import logging
-import os
-import mysql.connector
+import logging, os, mysql.connector
 import search, browse, vote, location, view, help
 
 def main():

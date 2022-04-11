@@ -1,10 +1,6 @@
 from telegram import *
 from telegram.ext import * 
-import os
-import mysql.connector
-import logging
-import haversine as hs
-import view
+import logging, os, mysql.connector
 
 def start(update, context):
     msg = "Nearest routes:\n"

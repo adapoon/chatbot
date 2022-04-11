@@ -1,7 +1,6 @@
-import mysql.connector
-import logging
 from telegram import *
 from telegram.ext import * 
+import logging, os, mysql.connector
 
 def start(update, context, route_id):
     logging.info("View:")

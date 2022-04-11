@@ -1,7 +1,6 @@
 from telegram import *
 from telegram.ext import * 
-import mysql.connector
-import logging
+import logging, os, mysql.connector
 
 def start(update, context):
     update.message.reply_text('Helping you helping you.')

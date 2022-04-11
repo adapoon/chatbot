@@ -1,7 +1,6 @@
 from telegram import *
 from telegram.ext import * 
-import mysql.connector
-import logging
+import logging, os, mysql.connector
 import haversine as hs
 import view
 

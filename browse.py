@@ -1,7 +1,6 @@
-import mysql.connector
-import logging
 from telegram import *
 from telegram.ext import * 
+import logging, os, mysql.connector
 
 #This function show 10 route records.
 def start(update, context):
