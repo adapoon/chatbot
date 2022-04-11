@@ -4,7 +4,7 @@ from telegram.ext import *
 import logging
 import os
 import mysql.connector
-import search, browse, vote, location, view
+import search, browse, vote, location, view, help
 
 def main():
     # Load your token and create an Updater for your Bot
@@ -20,6 +20,8 @@ def main():
     
 
     # on different commands - answer in Telegram
+    
+    
     dispatcher.add_handler(CommandHandler("start", start_command))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("search", search_command))
@@ -28,7 +30,7 @@ def main():
 
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[MessageHandler(Filters.location, location_message)],
-                                states={i : [CallbackQueryHandler(reply)] for i in range(1,518)},
+                                states={i : [CallbackQueryHandler(location.show_list)] for i in range(1,518)},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
@@ -45,18 +47,24 @@ def main():
 # context. Error handlers also receive the raised TelegramError object in error.
 
 def start_command(update: Update, context: CallbackContext):
+    # buttons = [
+        # [InlineKeyboardButton("/search", callback_data =), InlineKeyboardButton("/browse", callback_data =)], 
+        # [InlineKeyboardButton("/vote", callback_data =), InlineKeyboardButton("Nearest routes", callback_data =, request_location=True)],
+        # [InlineKeyboardButton("/help", callback_data =)]
+        # ]
+        
+        # button_list.append([InlineKeyboardButton(str(i)+". " +name + " ("+str(round(dist,1))+"km)", callback_data = route_id)])
+
     buttons = [
-        [KeyboardButton("/search"), KeyboardButton("/browse")], 
-        [KeyboardButton("/vote"), KeyboardButton("Nearest routes", request_location=True)],
-        [KeyboardButton("/help")]
+        [KeyboardButton("/search"), KeyboardButton("/browse"), KeyboardButton("/vote"), KeyboardButton("/help")], 
+        [KeyboardButton("Nearest routes", request_location=True)]
         ]
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to my bot!", reply_markup=ReplyKeyboardMarkup(buttons))
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to the Official HikeBot!", reply_markup=ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True))
 
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Helping you helping you.')
+    help.start(update, context)
 
 def location_message(update: Update, context: CallbackContext) -> int:
     location.start(update, context)
@@ -76,13 +84,6 @@ def view_route(update: Update, context: CallbackContext):
     
 def cancel(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END   
-    
-def reply(update: Update, context: CallbackContext):
-    logging.info("Reply: " + update.callback_query.data)
-    view.start(update, context, update.callback_query.data)
-    # logging.info("update: " + str(update))
-    # logging.info("context: " + str(context))
-    return 1
     
 if __name__ == '__main__':
     main()

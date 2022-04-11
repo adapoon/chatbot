@@ -1,8 +1,9 @@
+from telegram import *
+from telegram.ext import * 
 import mysql.connector
 import logging
 import haversine as hs
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ConversationHandler
+import view
 
 def start(update, context):
     msg = "Nearest routes:\n"
@@ -35,4 +36,7 @@ def start(update, context):
     cnx.close()
     
     
+def show_list(update: Update, context: CallbackContext):
+    view.start(update, context, update.callback_query.data)
+    return ConversationHandler.END
     

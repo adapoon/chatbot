@@ -31,7 +31,9 @@ def start(update, context, route_id):
 
 
     logging.info(str(update))
-    context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
+    context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
+    #context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
+    #context.bot.edit_message_text(chat_id=update.effective_chat.id, text=name, message_id = update.callback_query.message.message_id, parse_mode=ParseMode.HTML)
 
     #update.callback_query.message.reply_html(msg)
     #update.callback_query.message.reply_text(msg)
@@ -39,7 +41,6 @@ def start(update, context, route_id):
     context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+image)
     context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+map)
 
-    context.bot.send_message(chat_id = chatID, text = "Select What you Like", reply_markup = NEW_Menu)
 
     cursor.close()
     cnx.close()
