@@ -2,8 +2,7 @@ from telegram import *
 from telegram.ext import * 
 import logging, os, mysql.connector
 import view
-
-SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+import const
 
 #This function show 10 route records.
 def start(update, context):
@@ -28,7 +27,7 @@ def start(update, context):
     cursor.close()
     cnx.close()
     logging.info("return BROWSE")
-    return BROWSE
+    return const.BROWSE
     
 def show_district(update: Update, context: CallbackContext):
     region = update.callback_query.data
@@ -56,7 +55,7 @@ def show_district(update: Update, context: CallbackContext):
     cnx.close()
     
     logging.info("return REGION")
-    return REGION
+    return const.REGION
     
     
 def show_routes(update: Update, context: CallbackContext):
@@ -89,7 +88,7 @@ def show_routes(update: Update, context: CallbackContext):
     cnx.close()
 
     logging.info("return DISTRICT")
-    return DISTRICT
+    return const.DISTRICT
     
 def show_route(update: Update, context: CallbackContext):
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)

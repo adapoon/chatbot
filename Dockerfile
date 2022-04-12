@@ -1,12 +1,13 @@
 FROM python
 COPY chatbot.py /chatbot.py
-COPY search.py /search.py
+COPY const.py /const.py
 COPY browse.py /browse.py
+COPY search.py /search.py
 COPY vote.py /vote.py
 COPY location.py /location.py
+COPY top10.py /top10.py
 COPY view.py /view.py
 COPY help.py /help.py
-COPY top10.py /top10.py
 COPY requirements.txt /requirements.txt
 RUN pip install pip update
 RUN pip install -r requirements.txt

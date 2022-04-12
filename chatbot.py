@@ -2,8 +2,7 @@ from telegram import *
 from telegram.ext import * 
 import logging, os, mysql.connector
 import search, browse, vote, location, view, help, top10
-
-SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+import const
 
 def main():
     # Load your token and create an Updater for your Bot
@@ -23,7 +22,7 @@ def main():
     # PATH: Vote
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[CommandHandler("vote", vote_command)],
-                                states={VOTE : [CallbackQueryHandler(vote.show_result)]},
+                                states={const.VOTE : [CallbackQueryHandler(vote.show_result)]},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
@@ -31,7 +30,10 @@ def main():
     # PATH: Search
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[CommandHandler("search", search_command)],
-                                states={SEARCH : [MessageHandler(Filters.text , search.show_result)]},
+                                states={
+                                    const.SEARCH : [MessageHandler(Filters.text , search.show_result)],
+                                    const.RESULT : [CallbackQueryHandler(search.show_route)]
+                                    },
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
@@ -40,9 +42,9 @@ def main():
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[CommandHandler("browse", browse_command)],
                                 states={
-                                    BROWSE : [CallbackQueryHandler(browse.show_district)],
-                                    REGION : [CallbackQueryHandler(browse.show_routes)],
-                                    DISTRICT : [CallbackQueryHandler(browse.show_route)]
+                                    const.BROWSE : [CallbackQueryHandler(browse.show_district)],
+                                    const.REGION : [CallbackQueryHandler(browse.show_routes)],
+                                    const.DISTRICT : [CallbackQueryHandler(browse.show_route)]
                                     },
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
@@ -52,7 +54,7 @@ def main():
     # PATH: Nearest routes
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[MessageHandler(Filters.location, location_message)],
-                                states={NEAREST : [CallbackQueryHandler(location.show_result)]},
+                                states={const.NEAREST : [CallbackQueryHandler(location.show_result)]},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
@@ -60,7 +62,7 @@ def main():
     # PATH: Top 10
     dispatcher.add_handler(ConversationHandler(
                                 entry_points=[CommandHandler("top10", top10_command)],
-                                states={TOP10 : [CallbackQueryHandler(top10.show_result)]},
+                                states={const.TOP10 : [CallbackQueryHandler(top10.show_result)]},
                                 fallbacks=[CommandHandler('cancel', cancel)]
                             )
                         )
@@ -74,13 +76,7 @@ def main():
 
 
 def start_command(update: Update, context: CallbackContext):
-    buttons = [
-        [KeyboardButton("/browse"), KeyboardButton("/search"), KeyboardButton("/vote"), KeyboardButton("/top10")], 
-        [KeyboardButton("Nearest routes", request_location=True), KeyboardButton("/help")]
-        ]
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to the Official HikeBot!", reply_markup=ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True))
-
-
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to the Official HikeBot!", reply_markup=ReplyKeyboardMarkup(keyboard=const.KEYBOARD, resize_keyboard=True))
 
 def help_command(update: Update, context: CallbackContext) -> None:
     help.start(update, context)
@@ -99,9 +95,6 @@ def browse_command(update: Update, context: CallbackContext) -> int:
     
 def top10_command(update: Update, context: CallbackContext) -> int:
     return top10.start(update, context)
-    
-def view_route(update: Update, context: CallbackContext):
-    view.start(update, context)
     
 def cancel(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END   

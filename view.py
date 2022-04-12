@@ -1,8 +1,7 @@
 from telegram import *
 from telegram.ext import * 
 import logging, os, mysql.connector
-
-SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+import const
 
 def show_route(update, context, route_id):
     logging.info("View:")
@@ -32,23 +31,7 @@ def show_route(update, context, route_id):
         msg += "<code>Evalation :</code> " + str(elevation) + " m\n" 
         msg += description
 
-
-    #context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
-    #context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
-    #context.bot.edit_message_text(chat_id=update.effective_chat.id, text=name, message_id = update.callback_query.message.message_id, parse_mode=ParseMode.HTML)
-
-    #update.callback_query.message.reply_html(msg)
-    #update.callback_query.message.reply_text(msg)
-    #logging.info(str(update.callback_query))
-
-    buttons = [
-        [KeyboardButton("/browse"), KeyboardButton("/search"), KeyboardButton("/vote"), KeyboardButton("/top10")], 
-        [KeyboardButton("Nearest routes", request_location=True), KeyboardButton("/help")]
-        ]
-    context.bot.send_message(chat_id=update.effective_chat.id, parse_mode=ParseMode.HTML, text=msg, disable_web_page_preview=True, reply_markup=ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True))
-    # context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+image)
-    # context.bot.send_photo(chat_id=update.effective_chat.id, photo='https://comp7940images.blob.core.windows.net/images/'+map)
-
+    context.bot.send_message(chat_id=update.effective_chat.id, parse_mode=ParseMode.HTML, text=msg, disable_web_page_preview=True, reply_markup=ReplyKeyboardMarkup(keyboard=const.KEYBOARD, resize_keyboard=True))
 
     media.append(InputMediaPhoto('https://comp7940images.blob.core.windows.net/images/'+image));
     media.append(InputMediaPhoto('https://comp7940images.blob.core.windows.net/images/'+map));
