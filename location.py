@@ -4,6 +4,8 @@ import logging, os, mysql.connector
 import haversine as hs
 import view
 
+SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+
 def start(update, context):
     msg = "Nearest routes:\n"
     
@@ -34,7 +36,7 @@ def start(update, context):
 
     cursor.close()
     cnx.close()
-    
+    return NEAREST
     
 def show_result(update: Update, context: CallbackContext):
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)

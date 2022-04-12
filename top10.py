@@ -3,7 +3,8 @@ from telegram.ext import *
 import logging, os, mysql.connector
 import view
 
-#This function show 10 route records.
+SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+
 def start(update, context):
     msg = "Top 10 hiking routes:\n"
     
@@ -25,7 +26,7 @@ def start(update, context):
 
     cursor.close()
     cnx.close()
-    
+    return TOP10
     
 def show_result(update: Update, context: CallbackContext):
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)

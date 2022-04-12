@@ -3,6 +3,8 @@ from telegram.ext import *
 import logging, os, mysql.connector
 import view
 
+SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+
 #This function show 10 route records.
 def start(update, context):
     msg = "Choose a region:\n"
@@ -23,10 +25,10 @@ def start(update, context):
       
     update.message.reply_text(msg, reply_markup = InlineKeyboardMarkup(region_list))
 
-    logging.info("Check point 1")
     cursor.close()
     cnx.close()
-    
+    logging.info("return BROWSE")
+    return BROWSE
     
 def show_district(update: Update, context: CallbackContext):
     region = update.callback_query.data
@@ -34,7 +36,6 @@ def show_district(update: Update, context: CallbackContext):
 
     msg = "Choose a district:\n"
     
-    logging.info("Check point 1")
     district_list = []
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
@@ -51,12 +52,11 @@ def show_district(update: Update, context: CallbackContext):
       
     update.callback_query.message.reply_text(msg, reply_markup = InlineKeyboardMarkup(district_list))
 
-    logging.info("Check point 2")
     cursor.close()
     cnx.close()
-
-
-    return ConversationHandler.END
+    
+    logging.info("return REGION")
+    return REGION
     
     
 def show_routes(update: Update, context: CallbackContext):
@@ -85,11 +85,11 @@ def show_routes(update: Update, context: CallbackContext):
       
     update.callback_query.message.reply_text(msg, reply_markup = InlineKeyboardMarkup(route_list))
 
-    logging.info("Check point 12")
     cursor.close()
     cnx.close()
 
-    return ConversationHandler.END
+    logging.info("return DISTRICT")
+    return DISTRICT
     
 def show_route(update: Update, context: CallbackContext):
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)

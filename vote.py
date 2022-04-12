@@ -3,6 +3,8 @@ from telegram.ext import *
 import logging, os, mysql.connector
 import view
 
+SEARCH, BROWSE, REGION, DISTRICT, VOTE, TOP10, NEAREST, HELP = range(8)
+
 def start(update, context):
     msg = "Which route do you like more?\n"
     
@@ -26,7 +28,7 @@ def start(update, context):
 
     cursor.close()
     cnx.close()
-    
+    return VOTE
     
 def show_result(update: Update, context: CallbackContext):
     logging.info("Voting show_list")
