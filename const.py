@@ -6,3 +6,4 @@ KEYBOARD = [
     [KeyboardButton("/browse"), KeyboardButton("/search"), KeyboardButton("/vote"), KeyboardButton("/top10")], 
     [KeyboardButton("Nearest routes", request_location=True), KeyboardButton("/help")]
     ]
+WELCOME = "Welcome to the Official HikeBot!"

@@ -5,7 +5,7 @@ import view
 import const
 
 #This function show 10 route records.
-def start(update, context):
+def show_region(update, context):
     msg = "Choose a region:\n"
     
     region_list = []
