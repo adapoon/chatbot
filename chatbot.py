@@ -5,8 +5,6 @@ import search, browse, vote, location, view, help, top10
 
 def main():
     # Load your token and create an Updater for your Bot
-    
-    
     updater = Updater(token=(os.environ['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
 
@@ -17,8 +15,6 @@ def main():
     
 
     # on different commands - answer in Telegram
-    
-    
     dispatcher.add_handler(CommandHandler("start", start_command))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("search", search_command))
@@ -50,18 +46,7 @@ def main():
     updater.idle()
 
 
-# Define a few command handlers. These usually take the two arguments update and
-# context. Error handlers also receive the raised TelegramError object in error.
-
 def start_command(update: Update, context: CallbackContext):
-    # buttons = [
-        # [InlineKeyboardButton("/search", callback_data =), InlineKeyboardButton("/browse", callback_data =)], 
-        # [InlineKeyboardButton("/vote", callback_data =), InlineKeyboardButton("Nearest routes", callback_data =, request_location=True)],
-        # [InlineKeyboardButton("/help", callback_data =)]
-        # ]
-        
-        # button_list.append([InlineKeyboardButton(str(i)+". " +name + " ("+str(round(dist,1))+"km)", callback_data = route_id)])
-
     buttons = [
         [KeyboardButton("/search"), KeyboardButton("/browse"), KeyboardButton("/vote"), KeyboardButton("/help")], 
         [KeyboardButton("/top10"), KeyboardButton("Nearest routes", request_location=True)]
