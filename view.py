@@ -4,7 +4,8 @@ import logging, os, mysql.connector
 import const
 
 def show_route(update, context, route_id):
-    logging.info("View:")
+    logging.info("view.show_route")
+    
     media = []
     context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="Retrieving hiking route...")
 
@@ -31,7 +32,7 @@ def show_route(update, context, route_id):
         msg += "<code>Evalation :</code> " + str(elevation) + " m\n" 
         msg += description
 
-    context.bot.send_message(chat_id=update.effective_chat.id, parse_mode=ParseMode.HTML, text=msg, disable_web_page_preview=True, reply_markup=ReplyKeyboardMarkup(keyboard=const.KEYBOARD, resize_keyboard=True))
+    context.bot.send_message(chat_id=update.effective_chat.id, parse_mode=ParseMode.HTML, text=msg, disable_web_page_preview=True, reply_markup = ReplyKeyboardRemove(True))
 
     media.append(InputMediaPhoto('https://comp7940images.blob.core.windows.net/images/'+image));
     media.append(InputMediaPhoto('https://comp7940images.blob.core.windows.net/images/'+map));

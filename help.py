@@ -5,6 +5,23 @@ import logging, os, mysql.connector
 import const
 
 def start(update, context):
-    msg="This is a bot for hikers.\n\n <b>Find Routes</b>\n /browse - choose a district to find a hiking route\n /search - type keyword(s) to search for hiking routes \n\n<u>You can also send a location to get the nearest hiking routes!</u>\n\n<b>Vote</b>\n /vote - choose a route that you like \n /top10 - view voting result : the top10 hiking routes "
-    update.message.reply_text(msg, parse_mode=ParseMode.HTML)
+    logging.info("help.start")
+    msg="""<b>HKHikerBot</b> is a bot for hikers in Hong Kong.
+    
+<b><u>Hiking Route Information</u></b>
+<b>/browse</b> - Explore hiking routes in different regions and districts
+<b>/search</b> - Type keyword(s) to search for hiking routes
+<b>/nearby</b> - You can also send a location to get the nearest hiking routes!
+
+<b><u>Hiker Community</u></b>
+<b>/vote</b> - Vote for a route that you like
+<b>/top10</b> - View the top 10 hiking routes according to the voting results
+
+Developers: 
+- LAM Chak Fung
+- POON Yuen Mei Ada
+- TSOI Wai Chuen Thomas
+Data source: https://www.alltrails.com"""
+
+    update.message.reply_text(msg, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 

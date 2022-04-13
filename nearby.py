@@ -3,16 +3,20 @@ from telegram.ext import *
 import logging, os, mysql.connector
 import haversine as hs
 import view
-
 import const
 
 def start(update, context):
-    msg = "Nearest routes:\n"
+    logging.info("nearby.start")
     
-    logging.info("Location activated")
-    # logging.info("Update: " + str(update))
-    # logging.info("context: " + str(context))
+    update.message.reply_text("Send your location to find nearby routes", reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton("Send location", request_location=True)]], resize_keyboard=True))
+
+    logging.info("const.NEARBY")
+    return const.NEARBY
     
+def show_routes(update, context):
+    logging.info("nearby.show_routes")
+  
+    msg = "Nearby routes:"
     button_list = []
     
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
@@ -36,10 +40,17 @@ def start(update, context):
 
     cursor.close()
     cnx.close()
-    return const.NEAREST
     
-def show_result(update: Update, context: CallbackContext):
+    logging.info("const.LOCATION")
+    return const.LOCATION
+    
+def show_route(update: Update, context: CallbackContext):
+    logging.info("nearby.show_route")
+    
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     view.show_route(update, context, update.callback_query.data)
+    
+    logging.info("ConversationHandler.END")
+    return const.LOCATION
     return ConversationHandler.END
     

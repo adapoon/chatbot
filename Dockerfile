@@ -4,14 +4,14 @@ COPY const.py /const.py
 COPY browse.py /browse.py
 COPY search.py /search.py
 COPY vote.py /vote.py
-COPY location.py /location.py
+COPY nearby.py /nearby.py
 COPY top10.py /top10.py
 COPY view.py /view.py
 COPY help.py /help.py
 COPY requirements.txt /requirements.txt
 RUN pip install pip update
 RUN pip install -r requirements.txt
-ENV ACCESS_TOKEN=
+ENV ACCESS_TOKEN=5393429305:AAF7DCnZt3-t0tJGs88JDyTOs9WNtJZCWEI
 ENV MYSQL_HOST=comp7940-mysql.mysql.database.azure.com
 ENV MYSQL_USER=comp7940group2
 ENV MYSQL_PASS=hkbuMySQL7940

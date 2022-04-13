@@ -5,9 +5,11 @@ import view
 import const
 
 def start(update, context):
-    msg = "Top 10 hiking routes:\n"
+    logging.info("top10.start")
     
+    msg = "Top 10 hiking routes:\n"
     button_list = []
+    
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
@@ -28,6 +30,8 @@ def start(update, context):
     return const.TOP10
     
 def show_result(update: Update, context: CallbackContext):
+    logging.info("top10.show_result")
+    
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     view.show_route(update, context, update.callback_query.data)
     return ConversationHandler.END

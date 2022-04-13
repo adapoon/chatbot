@@ -6,9 +6,11 @@ import const
 
 #This function show 10 route records.
 def show_region(update, context):
-    msg = "Choose a region:\n"
+    logging.info("browse.start")
     
+    msg = "Choose a region:\n"
     region_list = []
+    
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
@@ -26,10 +28,11 @@ def show_region(update, context):
 
     cursor.close()
     cnx.close()
-    logging.info("return BROWSE")
     return const.BROWSE
     
 def show_district(update: Update, context: CallbackContext):
+    logging.info("browse.show_district")
+    
     region = update.callback_query.data
     context.bot.edit_message_text(chat_id=update.effective_chat.id, text="<b><u>"+region+"</u></b>", message_id = update.callback_query.message.message_id, parse_mode=ParseMode.HTML)
 
@@ -53,22 +56,18 @@ def show_district(update: Update, context: CallbackContext):
 
     cursor.close()
     cnx.close()
-    
-    logging.info("return REGION")
     return const.REGION
     
     
 def show_routes(update: Update, context: CallbackContext):
-    district = update.callback_query.data
-
-    logging.info("Check point 10")
+    logging.info("browse.show_routes")
     
+    district = update.callback_query.data
     context.bot.edit_message_text(chat_id=update.effective_chat.id, text="<b><u>"+district+"</u></b>", message_id = update.callback_query.message.message_id, parse_mode=ParseMode.HTML)
 
     msg = "Choose a route:\n"
-    
-    logging.info("Check point 11")
     route_list = []
+    
     cnx = mysql.connector.connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASS'],
                                   host=os.environ['MYSQL_HOST'],
                                   database=os.environ['MYSQL_DTBS'])
@@ -86,14 +85,12 @@ def show_routes(update: Update, context: CallbackContext):
 
     cursor.close()
     cnx.close()
-
-    logging.info("return DISTRICT")
     return const.DISTRICT
     
 def show_route(update: Update, context: CallbackContext):
+    logging.info("browse.show_route")
+    
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id = update.callback_query.message.message_id)
     view.show_route(update, context, update.callback_query.data)
-    logging.info("Check point 20")
-
     return ConversationHandler.END
     
