@@ -11,7 +11,7 @@ COPY help.py /help.py
 COPY requirements.txt /requirements.txt
 RUN pip install pip update
 RUN pip install -r requirements.txt
-ENV ACCESS_TOKEN=
+ENV ACCESS_TOKEN=5158343992:AAFuitFyKyiBiLj0Jf0qgXaupzKZ-I1A1NY
 ENV MYSQL_HOST=comp7940-mysql.mysql.database.azure.com
 ENV MYSQL_USER=comp7940group2
 ENV MYSQL_PASS=hkbuMySQL7940
