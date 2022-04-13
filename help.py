@@ -16,6 +16,7 @@ def start(update, context):
 <b><u>Hiker Community</u></b>
 <b>/vote</b> - Vote for a route that you like
 <b>/top10</b> - View the top 10 hiking routes according to the voting results
+<b>/help</b> - Return to this menu
 
 Developers: 
 - LAM Chak Fung
