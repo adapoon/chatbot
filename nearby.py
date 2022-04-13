@@ -8,7 +8,7 @@ import const
 def start(update, context):
     logging.info("nearby.start")
     
-    update.message.reply_text("Send your location to find nearby routes", reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton("Send location", request_location=True)]], resize_keyboard=True))
+    update.message.reply_text("Click the Send location button to find nearby routes", reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton("Send location", request_location=True)]], resize_keyboard=True))
 
     logging.info("const.NEARBY")
     return const.NEARBY
