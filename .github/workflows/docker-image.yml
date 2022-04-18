@@ -27,7 +27,7 @@ jobs:
           MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASS: ${{secrets.MYSQL_PASS}}
           MYSQL_DTBS: ${{secrets.MYSQL_DTBS}}
-        run: docker login -u $DOCKER_USERNAME - p $DOCKER_PASSWORD
+        run: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
