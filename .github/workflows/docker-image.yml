@@ -30,7 +30,7 @@ jobs:
         run: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${DOCKER_USERNAME}/chatbot:latest
+        run: docker build . -t ${{DOCKER_USERNAME}}/chatbot:latest
 
       - name: Docker Push
-        run: docker push ${DOCKER_USERNAME}/chatbot
+        run: docker push ${{DOCKER_USERNAME}}/chatbot
