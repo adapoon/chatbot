@@ -16,13 +16,13 @@ RUN pip install -r requirements.txt
 RUN --mount=type=secret,id=ACCESS_TOKEN \
   --mount=type=secret,id=MYSQL_HOST \
   --mount=type=secret,id=MYSQL_USER \
-  --mount=type=secret,id=MYSQL_PASSWORD \
-  --mount=type=secret,id=MYSQL_PORT \
+  --mount=type=secret,id=MYSQL_PASS \
+  --mount=type=secret,id=MYSQL_DTBS \
   export ACCESS_TOKEN=$(cat /run/secrets/ACCESS_TOKEN) && \
   export MYSQL_HOST=$(cat /run/secrets/MYSQL_HOST) && \
   export MYSQL_USER=$(cat /run/secrets/MYSQL_USER) && \
-  export MYSQL_PASSWORD=$(cat /run/secrets/MYSQL_PASSWORD) && \
-  export MYSQL_PORT=$(cat /run/secrets/MYSQL_PORT) && \
+  export MYSQL_PASS=$(cat /run/secrets/MYSQL_PASS) && \
+  export MYSQL_DTBS=$(cat /run/secrets/MYSQL_DTBS) && \
   python chatbot.py
 
 EXPOSE 80

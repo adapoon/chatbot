@@ -26,5 +26,5 @@ jobs:
           secrets: |
             "MYSQL_HOST=${{ secrets.MYSQL_HOST}}"
             "MYSQL_USER=${{ secrets.MYSQL_USER}}"
-            "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}"
-            "MYSQL_PORT=${{ secrets.MYSQL_PORT }}"
+            "MYSQL_PASS=${{ secrets.MYSQL_PASS}}"
+            "MYSQL_DTBS=${{ secrets.MYSQL_DTBS }}"
