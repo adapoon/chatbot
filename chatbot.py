@@ -15,64 +15,33 @@ def main():
     # PATH: Start
     dispatcher.add_handler(CommandHandler("start", start_command))
         
-    # PATH: Vote
+    # PATH: Conversation Handler
     dispatcher.add_handler(ConversationHandler(
-                                entry_points=[CommandHandler("vote", vote.start)],
-                                states={const.VOTE : [CallbackQueryHandler(vote.show_result)]},
-                                fallbacks=[CommandHandler('cancel', cancel)]
-                            )
-                        )
-    
-    # PATH: Search
-    dispatcher.add_handler(ConversationHandler(
-                                entry_points=[CommandHandler("search", search.start)],
+                                entry_points=[
+                                    CommandHandler("vote", vote.start),
+                                    CommandHandler("search", search.start),
+                                    CommandHandler("browse", browse.show_region),
+                                    CommandHandler("nearby", nearby.start),
+                                    CommandHandler("top10", top10.start),
+                                    MessageHandler(Filters.location, nearby.show_routes)
+                                    ],
                                 states={
+                                    const.VOTE : [CallbackQueryHandler(vote.show_result)],
                                     const.SEARCH : [MessageHandler(Filters.text , search.show_result)],
-                                    const.RESULT : [CallbackQueryHandler(search.show_route)]
-                                    },
-                                fallbacks=[CommandHandler('cancel', cancel)]
-                            )
-                        )
-    
-    # PATH: Browse
-    dispatcher.add_handler(ConversationHandler(
-                                entry_points=[CommandHandler("browse", browse.show_region)],
-                                states={
+                                    const.RESULT : [CallbackQueryHandler(search.show_route)],
                                     const.BROWSE : [CallbackQueryHandler(browse.show_district)],
                                     const.REGION : [CallbackQueryHandler(browse.show_routes)],
-                                    const.DISTRICT : [CallbackQueryHandler(browse.show_route)]
-                                    },
-                                fallbacks=[CommandHandler('cancel', cancel)]
-                            )
-                        )
-
-    # PATH: Nearby
-    dispatcher.add_handler(ConversationHandler(
-                                entry_points=[CommandHandler("nearby", nearby.start)],
-                                states={
+                                    const.DISTRICT : [CallbackQueryHandler(browse.show_route)],
                                     const.NEARBY : [MessageHandler(Filters.location, nearby.show_routes)],
-                                    const.LOCATION : [CallbackQueryHandler(nearby.show_route)]
+                                    const.LOCATION : [CallbackQueryHandler(nearby.show_route)],
+                                    const.LOCATION : [CallbackQueryHandler(nearby.show_route)],
+                                    const.TOP10 : [CallbackQueryHandler(top10.show_result)]
                                     },
-                                fallbacks=[CommandHandler('cancel', cancel)]
+                                fallbacks=[CommandHandler('cancel', cancel)],
+                                allow_reentry=True
                             )
                         )
 
-    dispatcher.add_handler(ConversationHandler(
-                                entry_points=[MessageHandler(Filters.location, nearby.show_routes)],
-                                states={const.LOCATION : [CallbackQueryHandler(nearby.show_route)]},
-                                fallbacks=[CommandHandler('cancel', cancel)]
-                            )
-                        )
-
-
-
-    # PATH: Top 10
-    dispatcher.add_handler(ConversationHandler(
-                                entry_points=[CommandHandler("top10", top10.start)],
-                                states={const.TOP10 : [CallbackQueryHandler(top10.show_result)]},
-                                fallbacks=[CommandHandler('cancel', cancel)]
-                            )
-                        )
 
     # PATH: Help
     dispatcher.add_handler(CommandHandler("help", help.start))
