@@ -9,12 +9,21 @@ COPY top10.py /top10.py
 COPY view.py /view.py
 COPY help.py /help.py
 COPY requirements.txt /requirements.txt
+
 RUN pip install pip update
 RUN pip install -r requirements.txt
-ENV ACCESS_TOKEN=5393429305:AAF7DCnZt3-t0tJGs88JDyTOs9WNtJZCWEI
-ENV MYSQL_HOST=comp7940-mysql.mysql.database.azure.com
-ENV MYSQL_USER=comp7940group2
-ENV MYSQL_PASS=hkbuMySQL7940
-ENV MYSQL_DTBS=chatbot
+
+RUN --mount=type=secret,id=ACCESS_TOKEN \
+  --mount=type=secret,id=MYSQL_HOST \
+  --mount=type=secret,id=MYSQL_USER \
+  --mount=type=secret,id=MYSQL_PASSWORD \
+  --mount=type=secret,id=MYSQL_PORT \
+  export ACCESS_TOKEN=$(cat /run/secrets/ACCESS_TOKEN) && \
+  export MYSQL_HOST=$(cat /run/secrets/MYSQL_HOST) && \
+  export MYSQL_USER=$(cat /run/secrets/MYSQL_USER) && \
+  export MYSQL_PASSWORD=$(cat /run/secrets/MYSQL_PASSWORD) && \
+  export MYSQL_PORT=$(cat /run/secrets/MYSQL_PORT) && \
+  python chatbot.py
+
 EXPOSE 80
-ENTRYPOINT ["python", "/chatbot.py"]
+CMD ["/bin/bash"]
